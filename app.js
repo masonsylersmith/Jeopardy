@@ -40,6 +40,7 @@ function chooseCategories(activeCategoriesArray, numOfCategories) {
     activeCategoriesArray.length,
     numOfCategories
   );
+  // Populating chosen categories array with random indecies and available categories
   for (categoryIndex of categoryIndexList) {
     chosenCategories.push(activeCategoriesArray[categoryIndex]);
   }
