@@ -47,10 +47,41 @@ function chooseCategories(activeCategoriesArray, numOfCategories) {
   return chosenCategories;
 }
 
+function removeFromActiveCategories(activeCategoriesArray, chosenCategories) {
+  activeCategoriesIndex = [];
+  newActiveCategories = [];
+  //Destructure activeCategories array to be an array with id values
+  for (category of activeCategoriesArray) {
+    activeCategoriesIndex.push(category.id);
+  }
+  //Splice the values from the active category index to hold the id values for the new set of active category ids... removing the chosen category ids from the index array
+  let categorySpliceIndex;
+  for (category of chosenCategories) {
+    categorySpliceIndex = activeCategoriesIndex.indexOf(category.id);
+    activeCategoriesIndex.splice(categorySpliceIndex, 1);
+  }
+  //Creating a new array with the new active categories
+  for (category of activeCategoriesArray) {
+    if (activeCategoriesIndex.includes(category.id)) {
+      newActiveCategories.push(category);
+    }
+  }
+  return newActiveCategories;
+}
+
 async function main() {
-  const activeCategories = await generateAllCategories(14);
+  //Initial category population
+  let activeCategories = await generateAllCategories(14);
+  console.log(activeCategories);
+  //Randomly choosing 6 categories for round one
   const chosenCategories = chooseCategories(activeCategories, 6);
   console.log(chosenCategories);
+  //Removing the chosen categories from the active categories
+  activeCategories = removeFromActiveCategories(
+    activeCategories,
+    chosenCategories
+  );
+  console.log(activeCategories);
 }
 
 main();
