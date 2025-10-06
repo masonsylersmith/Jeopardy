@@ -19,13 +19,13 @@ function randomIndexGenerator(upperLimit, indexAmount) {
 async function generateAllCategories(count) {
   //Pulling data from api
   let res = await axios.get(
-    `https://rithm-jeopardy.herokuapp.com/api/categories`,
-    { params: { count } }
+    // `https://rithm-jeopardy.herokuapp.com/api/categories`,
+    // { params: { count } }
+    `https://rithm-jeopardy.herokuapp.com/api/categories?count=${count}`
   );
   //Populating an array with the available categories
   allCategoriesArray = [];
-  res.data.forEach((category) => {
-    ({ id, title } = category);
+  res.data.forEach(({ id, title }) => {
     allCategoriesArray.push({ id, title });
   });
   //Returning an array of objects containing categories id and title
@@ -50,7 +50,7 @@ function chooseCategories(activeCategoriesArray, numOfCategories) {
 function removeFromActiveCategories(activeCategoriesArray, chosenCategories) {
   activeCategoriesIndex = [];
   newActiveCategories = [];
-  //Destructure activeCategories array to be an array with id values
+  // Destructure activeCategories array to be an array with id values
   for (category of activeCategoriesArray) {
     activeCategoriesIndex.push(category.id);
   }
