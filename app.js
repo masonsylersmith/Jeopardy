@@ -69,6 +69,19 @@ function removeFromActiveCategories(activeCategoriesArray, chosenCategories) {
   return newActiveCategories;
 }
 
+function populatePrices() {
+  let price = 200;
+  for (let i = 2; i < 7; i++) {
+    let categoryPrices = document.querySelectorAll(
+      `.categoryColumn .clue:nth-child(${i})`
+    );
+    categoryPrices.forEach((clue) => {
+      clue.innerText = `\$${price}`;
+    });
+    price += 200;
+  }
+}
+
 async function main() {
   //Initial category population
   let activeCategories = await generateAllCategories(14);
@@ -85,3 +98,4 @@ async function main() {
 }
 
 main();
+populatePrices();
