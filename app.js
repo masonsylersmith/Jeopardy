@@ -19,12 +19,10 @@ function randomIndexGenerator(upperLimit, indexAmount) {
 async function generateAllCategories(count) {
   //Pulling data from api
   let res = await axios.get(
-    // `https://rithm-jeopardy.herokuapp.com/api/categories`,
-    // { params: { count } }
     `https://rithm-jeopardy.herokuapp.com/api/categories?count=${count}`
   );
   //Populating an array with the available categories
-  allCategoriesArray = [];
+  let allCategoriesArray = [];
   res.data.forEach(({ id, title }) => {
     allCategoriesArray.push({ id, title });
   });
@@ -47,26 +45,33 @@ function chooseCategories(activeCategoriesArray, numOfCategories) {
   return chosenCategories;
 }
 
-function removeFromActiveCategories(activeCategoriesArray, chosenCategories) {
-  activeCategoriesIndex = [];
-  newActiveCategories = [];
-  // Destructure activeCategories array to be an array with id values
-  for (category of activeCategoriesArray) {
-    activeCategoriesIndex.push(category.id);
+//Returning the clue data in an array with a givin clue id
+async function generateClues(clueId) {
+  let res = await axios.get(`https://rithm-jeopardy.herokuapp.com/api/category?
+id=${clueId}`);
+  let categoryClues = [];
+  res.data.clues.forEach(({ answer, question, value }) => {
+    categoryClues.push({ answer, question, value });
+  });
+  return categoryClues;
+}
+
+//Selecting the category title of each column and populating them with chosen category titles
+function populateTitles(chosenCategories) {
+  for (let i = 0; i < 6; i++) {
+    let categoryTitle = document.querySelector(
+      `#gameBoardContainer .categoryColumn:nth-child(${i + 1}) .categoryTitle`
+    );
+    categoryTitle.innerText = chosenCategories[i].title;
   }
-  //Splice the values from the active category index to hold the id values for the new set of active category ids... removing the chosen category ids from the index array
-  let categorySpliceIndex;
-  for (category of chosenCategories) {
-    categorySpliceIndex = activeCategoriesIndex.indexOf(category.id);
-    activeCategoriesIndex.splice(categorySpliceIndex, 1);
+}
+
+//Adding the clues into the array of chosen categories
+async function getClues(chosenCategories) {
+  for (let i = 0; i < chosenCategories.length; i++) {
+    chosenCategories[i].clues = await generateClues(chosenCategories[i].id);
   }
-  //Creating a new array with the new active categories
-  for (category of activeCategoriesArray) {
-    if (activeCategoriesIndex.includes(category.id)) {
-      newActiveCategories.push(category);
-    }
-  }
-  return newActiveCategories;
+  return chosenCategories;
 }
 
 function populatePrices() {
@@ -85,17 +90,12 @@ function populatePrices() {
 async function main() {
   //Initial category population
   let activeCategories = await generateAllCategories(14);
-  console.log(activeCategories);
-  //Randomly choosing 6 categories for round one
-  const chosenCategories = chooseCategories(activeCategories, 6);
+  //Randomly choosing 6 categories
+  let chosenCategories = chooseCategories(activeCategories, 6);
+  populateTitles(chosenCategories);
+  populatePrices();
+  getClues(chosenCategories);
   console.log(chosenCategories);
-  //Removing the chosen categories from the active categories
-  activeCategories = removeFromActiveCategories(
-    activeCategories,
-    chosenCategories
-  );
-  console.log(activeCategories);
 }
 
 main();
-populatePrices();

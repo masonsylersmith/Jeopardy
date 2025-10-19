@@ -63,6 +63,7 @@ body {
 
 .categoryColumn {
   min-width: 170px;
+  max-width: 170px;
 }
 
 .categoryTitle,
@@ -70,13 +71,20 @@ body {
   height: 100px;
   background-color: rgb(0, 37, 178);
   margin: 16px 8px;
+  font-family: "Korinna";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.categoryTitle {
+  color: rgb(237, 252, 248);
+  font-size: 30px;
+  text-transform: capitalize;
 }
 
 .clue {
   font-size: 48px;
   color: rgb(250, 161, 63);
-  font-family: "Korinna";
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
