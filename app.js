@@ -67,8 +67,8 @@ function populateTitles(chosenCategories) {
 }
 
 //Adding the clues into the array of chosen categories
-async function getClues(chosenCategories) {
-  for (let i = 0; i < chosenCategories.length; i++) {
+async function addClues(chosenCategories) {
+  for (let i = 0; i < 6; i++) {
     chosenCategories[i].clues = await generateClues(chosenCategories[i].id);
   }
   return chosenCategories;
@@ -92,10 +92,39 @@ async function main() {
   let activeCategories = await generateAllCategories(14);
   //Randomly choosing 6 categories
   let chosenCategories = chooseCategories(activeCategories, 6);
+  //Adds clues to chosen categories array
+  await addClues(chosenCategories);
+  //Populates the category titles
+  console.log(chosenCategories);
   populateTitles(chosenCategories);
   populatePrices();
-  getClues(chosenCategories);
-  console.log(chosenCategories);
+
+  //Selecting all the elements needing to be worked with
+  const gameBoard = document.querySelector("#gameBoardContainer");
+  const popup = document.querySelector("#popup");
+  const closePopup = document.querySelector("#closePopup");
+  const categoryColumnList = document.querySelectorAll(".categoryColumn");
+  popup.style.display = "none";
+  gameBoard.addEventListener("click", function (event) {
+    let clicked = event.target;
+    let parentColumn = clicked.parentElement;
+    let clueList = parentColumn.querySelectorAll(".clue");
+    //Getting the column number of what was clicked
+    for (let i = 0; i < categoryColumnList.length; i++) {
+      if (categoryColumnList[i] === parentColumn) {
+        console.log(`Column: ${i + 1}`);
+      }
+    }
+    //Getting the row number of what was clicked
+    for (let i = 0; i < clueList.length; i++) {
+      if (clueList[i] === clicked) {
+        console.log(`Row: ${i + 1}`);
+      }
+    }
+    if (event.target === closePopup) {
+      popup.style.display = "none";
+    }
+  });
 }
 
 main();
