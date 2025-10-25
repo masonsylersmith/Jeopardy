@@ -89,20 +89,61 @@ body {
   color: rgb(250, 161, 63);
 }
 
+#popupBackdrop {
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  width: 100vw;
+  height: 100vh;
+  background-color: #ffffff49;
+  z-index: 500;
+  display: none;
+}
+
 #popup {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: white;
+  background-color: rgb(0, 37, 178);
+  border: 5px solid rgb(80, 208, 252);
+  border-radius: 20px;
   padding: 20px;
-  border: 1px solid #ccc;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+#popupClue,
+#popupAnswer {
+  font-family: "Korinna";
+  color: rgb(245, 243, 247);
+  font-size: 20px;
+  padding: 10px;
+  text-align: center;
+}
+
+#popupAnswer {
+  color: rgb(250, 161, 63);
+}
+
+#closePopup,
+#popupAnswerButton {
+  padding: 5px;
+  margin: 15px;
+  font-size: 18px;
+  border: 2px solid rgb(250, 161, 63);
+  text-align: center;
+  font-family: sans-serif;
+  color: rgb(250, 161, 63);
+  align-self: center;
+}
+
+#popupAnswer {
+  text-decoration: underline;
   display: none;
 }
 
 #closePopup {
-  padding: 5px;
-  border: 1px solid black;
+  display: none;
 }

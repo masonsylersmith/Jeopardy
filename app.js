@@ -74,6 +74,8 @@ async function addClues(chosenCategories) {
   return chosenCategories;
 }
 
+//Populates the prices onto the board
+//Also sets class as active for each card
 function populatePrices() {
   let price = 200;
   for (let i = 2; i < 7; i++) {
@@ -82,9 +84,20 @@ function populatePrices() {
     );
     categoryPrices.forEach((clue) => {
       clue.innerText = `\$${price}`;
+      clue.classList.add("activeClue");
     });
     price += 200;
   }
+}
+
+//Function that sets values of popup, then displays the popup
+function showPopUp(question, answer) {
+  const popup = document.querySelector("#popupBackdrop");
+  const popupQuestion = document.querySelector("#popupClue");
+  const popupAnswer = document.querySelector("#popupAnswer");
+  popupQuestion.textContent = question;
+  popupAnswer.textContent = answer;
+  popup.style.display = "block";
 }
 
 async function main() {
@@ -101,27 +114,45 @@ async function main() {
 
   //Selecting all the elements needing to be worked with
   const gameBoard = document.querySelector("#gameBoardContainer");
-  const popup = document.querySelector("#popup");
+  const popup = document.querySelector("#popupBackdrop");
+  const seeAnswer = document.querySelector("#popupAnswerButton");
+  const popupAnswer = document.querySelector("#popupAnswer");
   const closePopup = document.querySelector("#closePopup");
   const categoryColumnList = document.querySelectorAll(".categoryColumn");
-  popup.style.display = "none";
   gameBoard.addEventListener("click", function (event) {
     let clicked = event.target;
     let parentColumn = clicked.parentElement;
     let clueList = parentColumn.querySelectorAll(".clue");
+    let clickedCategory;
     //Getting the column number of what was clicked
     for (let i = 0; i < categoryColumnList.length; i++) {
       if (categoryColumnList[i] === parentColumn) {
-        console.log(`Column: ${i + 1}`);
+        clickedCategory = i;
       }
     }
     //Getting the row number of what was clicked
+    //Shows popup for that specified clue card
+    //Also removes card from future play
     for (let i = 0; i < clueList.length; i++) {
-      if (clueList[i] === clicked) {
-        console.log(`Row: ${i + 1}`);
+      if (clueList[i] === clicked && clicked.classList.contains("activeClue")) {
+        clicked.innerText = "";
+        clicked.classList.remove("activeClue");
+        showPopUp(
+          chosenCategories[clickedCategory].clues[i].question,
+          chosenCategories[clickedCategory].clues[i].answer
+        );
       }
     }
-    if (event.target === closePopup) {
+    //Events for button clicks in popup
+    if (clicked === seeAnswer) {
+      seeAnswer.style.display = "none";
+      popupAnswer.style.display = "block";
+      closePopup.style.display = "block";
+    }
+    if (clicked === closePopup) {
+      seeAnswer.style.display = "block";
+      popupAnswer.style.display = "none";
+      closePopup.style.display = "none";
       popup.style.display = "none";
     }
   });
